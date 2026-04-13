@@ -5,6 +5,7 @@ import { registerRenderCommand } from "./commands/render.js";
 import { registerRenderFrameCommand } from "./commands/render-frame.js";
 import { registerDoctorCommand } from "./commands/doctor.js";
 import { registerMotionCommand } from "./commands/motion.js";
+import { registerBlenderCommand } from "./commands/blender.js";
 import { logCommand } from "./utils/logger.js";
 
 program
@@ -17,6 +18,7 @@ registerRenderCommand(program);
 registerRenderFrameCommand(program);
 registerDoctorCommand(program);
 registerMotionCommand(program);
+registerBlenderCommand(program);
 
 logCommand(process.argv);
 program.parse();

@@ -9,6 +9,9 @@
 
 ## 1. Rendering & Performance
 
+Security note:
+Any final production path should remain operable in a controlled local environment without mandatory cloud services.
+
 ### 1.1 Headless PixiJS + node-canvas Limitations
 
 **Problem**: PixiJS is designed for WebGL browser rendering. node-canvas only supports Canvas 2D context, not WebGL. PixiJS filters (blur, glow, color matrix) and blend modes may not work in headless mode.

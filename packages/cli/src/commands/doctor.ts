@@ -78,6 +78,33 @@ async function checkCanvas(): Promise<CheckResult> {
   }
 }
 
+async function checkBlender(): Promise<CheckResult> {
+  try {
+    const { probeBlender } = await import("@22b/anime-blender");
+    const probe = probeBlender();
+    if (probe.found) {
+      return {
+        name: "Blender",
+        status: "ok",
+        detail: probe.version ? `${probe.version} (${probe.binary})` : String(probe.binary),
+      };
+    }
+    return {
+      name: "Blender",
+      status: "warn",
+      detail: "not found (required for secure final render path)",
+      fix: "Install Blender 4.x locally or set BLENDER_PATH",
+    };
+  } catch (err) {
+    return {
+      name: "Blender",
+      status: "warn",
+      detail: (err as Error).message.slice(0, 80),
+      fix: "pnpm install (from monorepo root)",
+    };
+  }
+}
+
 function checkRhubarb(): CheckResult {
   // Check common install locations
   const candidates = [
@@ -192,6 +219,7 @@ export function registerDoctorCommand(program: Command): void {
         checkNode(),
         checkFfmpeg(),
         await checkCanvas(),
+        await checkBlender(),
         checkRhubarb(),
         checkDiskSpace(),
         checkLogDir(),

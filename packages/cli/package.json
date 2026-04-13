@@ -11,6 +11,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@22b/anime-blender": "workspace:*",
     "@22b/anime-core": "workspace:*",
     "@22b/anime-renderer": "workspace:*",
     "chalk": "^5.3.0",

@@ -1,5 +1,5 @@
 {
-  "name": "@22b/anime-renderer",
+  "name": "@22b/anime-blender",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,16 +13,11 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
-    "clean": "rm -rf dist",
-    "create-test-assets": "node scripts/create-test-assets.mjs",
-    "prepare-assets": "node scripts/prepare-assets.mjs",
-    "extract-mouths": "node scripts/extract-mouths.mjs",
-    "erase-mouth": "node scripts/erase-mouth.mjs"
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@22b/anime-core": "workspace:*",
-    "@napi-rs/canvas": "^0.1.53",
-    "sharp": "^0.33.5"
+    "@22b/anime-renderer": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.x",

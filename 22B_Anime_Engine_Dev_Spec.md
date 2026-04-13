@@ -5,6 +5,12 @@
 > **License**: MIT
 > **Target**: Claude Code (Codex) implementation
 > **Date**: 2026-04-13
+> **Direction Update**: Keep the JSON-driven 2D engine for previz, but use Blender toon-shaded 3D as the primary final-render path.
+> **Security Constraint**: Production workflow must remain operable in a controlled local environment without mandatory cloud dependencies.
+> **Design Note**: See `design/2026-04-13_Blender_Toon_Pivot_Secure.md` for the local-first variant of this pivot.
+> **Production Strategy Update**: Long-form episodes now come first. Shorts are derivatives extracted from approved long-form scenes, not the other way around.
+> **Asset Status Update**: Image assets have been reorganized and saved by prompt/theme groupings. Canonical asset mapping should follow the new folder taxonomy, not the older flat layout assumptions.
+> **Scenario Status Update**: Season 1 scenario source now exists in `scenes/Dalis_Creek_EP01_Full.md`, `scenes/Dalis_Creek_EP02_EP10.md`, `scenes/Dalis_Creek_EP11_EP20.md`, and `scenes/Dalis_Creek_Series_Bible.md`.
 
 ---
 

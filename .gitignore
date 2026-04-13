@@ -11,6 +11,7 @@ dist/
 # Temp render frames
 /tmp/
 output/
+build/
 
 # OS
 .DS_Store

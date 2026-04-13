@@ -6,7 +6,6 @@
     "tsBuildInfoFile": "./dist/.tsbuildinfo"
   },
   "references": [
-    { "path": "../blender" },
     { "path": "../core" },
     { "path": "../renderer" }
   ],
