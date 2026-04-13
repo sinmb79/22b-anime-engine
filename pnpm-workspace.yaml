@@ -1,0 +1,6 @@
+packages:
+  - "packages/*"
+
+onlyBuiltDependencies:
+  - "@napi-rs/canvas"
+  - sharp

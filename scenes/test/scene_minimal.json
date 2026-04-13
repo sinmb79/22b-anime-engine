@@ -1,0 +1,138 @@
+{
+  "version": "1.0",
+  "meta": {
+    "title": "Test Scene - Forest Hello",
+    "fps": 24,
+    "width": 1280,
+    "height": 720,
+    "duration": 5.0
+  },
+  "assets": [
+    {
+      "id": "bg_forest",
+      "type": "image",
+      "source": { "path": "../../assets/backgrounds/forest_day.png" }
+    },
+    {
+      "id": "char_mimi_body",
+      "type": "image",
+      "source": { "path": "../../assets/characters/mimi/body.png" }
+    },
+    {
+      "id": "char_mimi_head",
+      "type": "image",
+      "source": { "path": "../../assets/characters/mimi/head.png" }
+    }
+  ],
+  "layers": [
+    {
+      "id": "bg_main",
+      "type": "background",
+      "visible": true,
+      "opacity": 1.0,
+      "zIndex": 0,
+      "assetId": "bg_forest",
+      "transform": {
+        "x": 640,
+        "y": 360,
+        "rotation": 0,
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      }
+    },
+    {
+      "id": "char_mimi",
+      "type": "character",
+      "visible": true,
+      "opacity": 1.0,
+      "zIndex": 10,
+      "pivot": { "x": 640, "y": 360 },
+      "transform": {
+        "x": 400,
+        "y": 400,
+        "rotation": 0,
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      },
+      "keyframes": [
+        {
+          "time": 0,
+          "transform": { "x": 400, "y": 400 },
+          "easing": "ease-out"
+        },
+        {
+          "time": 2.0,
+          "transform": { "x": 640, "y": 400 },
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 5.0,
+          "transform": { "x": 640, "y": 400 },
+          "easing": "linear"
+        }
+      ],
+      "parts": [
+        {
+          "id": "body",
+          "assetId": "char_mimi_body",
+          "pivot": { "x": 0.5, "y": 0.7 },
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "rotation": 0,
+            "scaleX": 1.0,
+            "scaleY": 1.0,
+            "anchorX": 0.5,
+            "anchorY": 0.5
+          },
+          "keyframes": [
+            { "time": 0, "transform": { "scaleY": 1.0 }, "easing": "ease-in-out" },
+            { "time": 1.5, "transform": { "scaleY": 1.02 }, "easing": "ease-in-out" },
+            { "time": 3.0, "transform": { "scaleY": 1.0 }, "easing": "ease-in-out" },
+            { "time": 4.5, "transform": { "scaleY": 1.02 }, "easing": "ease-in-out" },
+            { "time": 5.0, "transform": { "scaleY": 1.0 }, "easing": "ease-in-out" }
+          ]
+        },
+        {
+          "id": "head",
+          "assetId": "char_mimi_head",
+          "pivot": { "x": 0.5, "y": 0.8 },
+          "parentPartId": "body",
+          "transform": {
+            "x": 0,
+            "y": -120,
+            "rotation": 0,
+            "scaleX": 1.0,
+            "scaleY": 1.0,
+            "anchorX": 0.5,
+            "anchorY": 0.5
+          }
+        }
+      ]
+    }
+  ],
+  "camera": {
+    "initialTransform": { "x": 640, "y": 360, "zoom": 1.0 },
+    "keyframes": [
+      {
+        "time": 3.0,
+        "x": 640,
+        "y": 360,
+        "zoom": 1.2,
+        "easing": "ease-in-out"
+      },
+      {
+        "time": 5.0,
+        "x": 640,
+        "y": 360,
+        "zoom": 1.2,
+        "easing": "linear"
+      }
+    ]
+  },
+  "audio": []
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@22b/anime-cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "anime": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@22b/anime-core": "workspace:*",
+    "@22b/anime-renderer": "workspace:*",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.x",
+    "typescript": "^5.5.4"
+  }
+}

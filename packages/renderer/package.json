@@ -1,0 +1,28 @@
+{
+  "name": "@22b/anime-renderer",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "clean": "rm -rf dist",
+    "create-test-assets": "node scripts/create-test-assets.mjs"
+  },
+  "dependencies": {
+    "@22b/anime-core": "workspace:*",
+    "@napi-rs/canvas": "^0.1.53",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.x",
+    "typescript": "^5.5.4"
+  }
+}
