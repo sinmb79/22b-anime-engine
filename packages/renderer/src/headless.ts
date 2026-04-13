@@ -6,7 +6,7 @@ import { randomUUID } from "node:crypto";
 import { validateScene, frameIterator, composeFrame, type Scene } from "@22b/anime-core";
 import { loadAssets, renderFrameToBuffer } from "./canvas-renderer.js";
 import { exportFramePng, ensureDir } from "./frame-exporter.js";
-import { encodeVideo } from "./video-encoder.js";
+import { encodeVideo, type AudioInput } from "./video-encoder.js";
 
 // ─── Render Quality ───────────────────────────────────────────────────────────
 
@@ -51,6 +51,25 @@ export interface RenderFrameOptions {
 }
 
 // ─── Asset Path Resolution ────────────────────────────────────────────────────
+
+function resolveAudioTracks(scene: Scene, sceneDir: string): AudioInput[] {
+  const tracks: AudioInput[] = [];
+  for (const track of scene.audio) {
+    const absPath = resolve(sceneDir, track.source);
+    if (!existsSync(absPath)) {
+      console.warn(`  [audio] 파일 없음, 스킵: ${absPath}`);
+      continue;
+    }
+    tracks.push({
+      path: absPath,
+      startTime: track.startTime,
+      volume: track.volume,
+      fadeIn: track.fadeIn,
+      fadeOut: track.fadeOut,
+    });
+  }
+  return tracks;
+}
 
 function resolveAssetPaths(scene: Scene, sceneDir: string): Map<string, string> {
   const paths = new Map<string, string>();
@@ -135,7 +154,8 @@ export async function renderScene(options: RenderOptions): Promise<void> {
         },
       };
 
-  // 3. Resolve assets
+  // 3. Resolve assets + audio
+  const audioTracks = resolveAudioTracks(baseScene, sceneDir);
   const assetPaths = resolveAssetPaths(baseScene, sceneDir);
 
   // 4. Load images
@@ -191,6 +211,8 @@ export async function renderScene(options: RenderOptions): Promise<void> {
       framesDir,
       outputPath: resolve(outputPath),
       fps: scene.meta.fps,
+      audioTracks,
+      duration: baseScene.meta.duration,
       crf: options.crf,
       preset: options.preset,
       onProgress: (frame) => onProgress?.(frame, framesToRender),

@@ -11,7 +11,7 @@
     {
       "id": "bg_creek_spring",
       "type": "image",
-      "source": { "path": "../../assets/backgrounds/creek_spring.png" }
+      "source": { "path": "../../assets/backgrounds/[BG01] 냇가 — 봄.png" }
     },
     {
       "id": "char_dali",
@@ -203,5 +203,15 @@
       }
     ]
   },
-  "audio": []
+  "audio": [
+    {
+      "id": "voice_dali_01",
+      "type": "voice",
+      "source": "D:/Workspace/ScienceShorts/output/20260416_hypnic_jerk/voice_ko_00.wav",
+      "startTime": 7.2,
+      "volume": 0.9,
+      "fadeIn": 0.1,
+      "fadeOut": 0.3
+    }
+  ]
 }
