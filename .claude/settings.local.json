@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(pnpm build:*)",
+      "Bash(node packages/cli/dist/index.js validate scenes/test/scene_minimal.json)",
+      "Bash(node packages/cli/dist/index.js validate scenes/test/scene_minimal.json --format json)",
+      "Bash(node packages/cli/dist/index.js motion apply-secondary scenes/test/scene_minimal.json -o scenes/test/scene_with_secondary.json)",
+      "Bash(node packages/cli/dist/index.js validate scenes/test/scene_with_secondary.json)",
+      "Bash(node packages/cli/dist/index.js doctor)"
     ]
   }
 }

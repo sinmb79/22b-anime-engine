@@ -3,6 +3,9 @@ import { program } from "commander";
 import { registerValidateCommand } from "./commands/validate.js";
 import { registerRenderCommand } from "./commands/render.js";
 import { registerRenderFrameCommand } from "./commands/render-frame.js";
+import { registerDoctorCommand } from "./commands/doctor.js";
+import { registerMotionCommand } from "./commands/motion.js";
+import { logCommand } from "./utils/logger.js";
 
 program
   .name("anime")
@@ -12,5 +15,8 @@ program
 registerValidateCommand(program);
 registerRenderCommand(program);
 registerRenderFrameCommand(program);
+registerDoctorCommand(program);
+registerMotionCommand(program);
 
+logCommand(process.argv);
 program.parse();

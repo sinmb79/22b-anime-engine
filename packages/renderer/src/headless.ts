@@ -1,17 +1,43 @@
-import { readFile, rm } from "node:fs/promises";
+import { readFile, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { randomUUID } from "node:crypto";
-import { validateScene, frameIterator, type Scene } from "@22b/anime-core";
+import { validateScene, frameIterator, composeFrame, type Scene } from "@22b/anime-core";
 import { loadAssets, renderFrameToBuffer } from "./canvas-renderer.js";
 import { exportFramePng, ensureDir } from "./frame-exporter.js";
 import { encodeVideo } from "./video-encoder.js";
 
+// ─── Render Quality ───────────────────────────────────────────────────────────
+
+/**
+ * Render quality presets (Risk Analysis §6.3 — three-tier preview system).
+ *
+ * | Preset    | Resolution | FPS | Use case                          |
+ * |-----------|-----------|-----|-----------------------------------|
+ * | animatic  | 480p       |  6  | Codex self-validation, fast check |
+ * | draft     | 720p       | 12  | Boss timing review                |
+ * | final     | full       | 24  | Delivery                          |
+ */
+export type RenderQuality = "animatic" | "draft" | "final";
+
+interface QualityConfig {
+  scaleFactor: number;  // applied to scene width/height
+  fpsDivisor: number;   // render every Nth frame (1 = all frames)
+}
+
+const QUALITY_CONFIG: Record<RenderQuality, QualityConfig> = {
+  animatic: { scaleFactor: 480 / 1080, fpsDivisor: 4 },  // ~6fps from 24fps source
+  draft:    { scaleFactor: 720 / 1080, fpsDivisor: 2 },  // ~12fps
+  final:    { scaleFactor: 1.0,        fpsDivisor: 1 },  // full quality
+};
+
+// ─── Options ──────────────────────────────────────────────────────────────────
+
 export interface RenderOptions {
   scenePath: string;
   outputPath: string;
-  /** Override the temp directory for frame PNGs. Default: OS temp dir. */
+  quality?: RenderQuality;
   tempDir?: string;
   crf?: number;
   preset?: "ultrafast" | "superfast" | "veryfast" | "faster" | "fast" | "medium" | "slow" | "slower" | "veryslow";
@@ -26,26 +52,21 @@ export interface RenderFrameOptions {
 
 // ─── Asset Path Resolution ────────────────────────────────────────────────────
 
-/**
- * Resolves all asset paths relative to the scene file directory.
- * Throws if any required file is missing.
- * Phase 0: only source.path is supported. assetDb and generate throw NotImplementedError.
- */
 function resolveAssetPaths(scene: Scene, sceneDir: string): Map<string, string> {
   const paths = new Map<string, string>();
   const missing: string[] = [];
 
   for (const asset of scene.assets) {
-    if (asset.type === "audio") continue; // Audio handled separately
+    if (asset.type === "audio") continue;
 
     if (asset.source.assetDb !== undefined) {
       throw new Error(
-        `Asset "${asset.id}" uses source.assetDb which is not yet implemented (Phase 3).`
+        `Asset "${asset.id}" uses source.assetDb — not yet implemented (Phase 3).`
       );
     }
     if (asset.source.generate !== undefined) {
       throw new Error(
-        `Asset "${asset.id}" uses source.generate (ComfyUI) which is not yet implemented (Phase 3).`
+        `Asset "${asset.id}" uses source.generate (ComfyUI) — not yet implemented (Phase 3).`
       );
     }
     if (!asset.source.path) {
@@ -67,32 +88,54 @@ function resolveAssetPaths(scene: Scene, sceneDir: string): Map<string, string> 
   return paths;
 }
 
-// ─── Full Scene Render ────────────────────────────────────────────────────────
+// ─── Static Layer Detection ───────────────────────────────────────────────────
 
 /**
- * Full pipeline: Scene JSON → PNG frames → MP4.
- *
- * Pipeline steps:
- * 1. Read + parse scene JSON
- * 2. Validate with Zod
- * 3. Resolve asset paths
- * 4. Load images into memory
- * 5. Create temp dir for frame output
- * 6. For each frame: compose → render → export PNG
- * 7. FFmpeg encode frames → MP4
- * 8. Clean up temp frames
+ * Returns true if a layer has no animation — its output is identical every frame.
+ * Used for static layer caching (render once, reuse bitmap).
  */
+function isStaticLayer(layer: Scene["layers"][number]): boolean {
+  if (layer.keyframes && layer.keyframes.length > 0) return false;
+  if (layer.type === "background") return true;
+  if (layer.type === "character") {
+    return layer.parts.every(
+      (p) =>
+        (!p.keyframes || p.keyframes.length === 0) &&
+        (!p.spriteSwitch || p.spriteSwitch.keyframes.length === 0)
+    );
+  }
+  if (layer.type === "prop") return (!layer.keyframes || layer.keyframes.length === 0);
+  return false;
+}
+
+// ─── Full Scene Render ────────────────────────────────────────────────────────
+
 export async function renderScene(options: RenderOptions): Promise<void> {
   const { scenePath, outputPath, onProgress } = options;
+  const quality = options.quality ?? "final";
+  const qualCfg = QUALITY_CONFIG[quality];
 
   // 1-2. Read + validate
   const sceneAbsPath = resolve(scenePath);
   const sceneDir = dirname(sceneAbsPath);
   const raw = JSON.parse(await readFile(sceneAbsPath, "utf-8")) as unknown;
-  const scene = validateScene(raw);
+  const baseScene = validateScene(raw);
+
+  // Apply quality scale to scene dimensions
+  const scene: Scene = qualCfg.scaleFactor === 1.0
+    ? baseScene
+    : {
+        ...baseScene,
+        meta: {
+          ...baseScene.meta,
+          width: Math.round(baseScene.meta.width * qualCfg.scaleFactor),
+          height: Math.round(baseScene.meta.height * qualCfg.scaleFactor),
+          fps: Math.round(baseScene.meta.fps / qualCfg.fpsDivisor),
+        },
+      };
 
   // 3. Resolve assets
-  const assetPaths = resolveAssetPaths(scene, sceneDir);
+  const assetPaths = resolveAssetPaths(baseScene, sceneDir);
 
   // 4. Load images
   const imageCache = await loadAssets(assetPaths);
@@ -103,39 +146,66 @@ export async function renderScene(options: RenderOptions): Promise<void> {
     : join(tmpdir(), `anime-engine-${randomUUID()}`);
   await ensureDir(framesDir);
 
-  const totalFrames = Math.ceil(scene.meta.duration * scene.meta.fps);
+  // Determine which frames to render (skip frames per quality setting)
+  const baseFps = baseScene.meta.fps;
+  const totalBaseFps = Math.ceil(baseScene.meta.duration * baseFps);
+  const framesToRender = Math.ceil(baseScene.meta.duration * scene.meta.fps);
+
+  // Pre-detect static layers for caching
+  const staticLayerIds = new Set(
+    baseScene.layers.filter(isStaticLayer).map((l) => l.id)
+  );
+  const staticCache = new Map<string, Buffer>(); // layerId → rendered buffer (unused directly — whole-frame cache below)
+
+  // Whole-frame static cache: if ALL layers are static, render frame 0 once and reuse
+  const allStatic = baseScene.layers.every(isStaticLayer) && scene.camera.keyframes.length === 0;
+  let staticFrameBuffer: Buffer | null = null;
 
   try {
-    // 6. Render frames
-    for (const frameState of frameIterator(scene)) {
-      const buffer = renderFrameToBuffer(frameState.composed, imageCache);
-      await exportFramePng(buffer, frameState.frameIndex, framesDir);
-      onProgress?.(frameState.frameIndex + 1, totalFrames);
+    let exportIndex = 0;
+
+    for (let i = 0; i < framesToRender; i++) {
+      const time = i / scene.meta.fps;
+
+      let buffer: Buffer;
+
+      if (allStatic && staticFrameBuffer) {
+        buffer = staticFrameBuffer;
+      } else {
+        const composed = composeFrame(scene, time);
+        buffer = renderFrameToBuffer(composed, imageCache);
+
+        if (allStatic && !staticFrameBuffer) {
+          staticFrameBuffer = buffer;
+        }
+      }
+
+      await exportFramePng(buffer, exportIndex, framesDir);
+      exportIndex++;
+      onProgress?.(exportIndex, framesToRender);
     }
 
-    // 7. Encode
+    // Encode
     await encodeVideo({
       framesDir,
       outputPath: resolve(outputPath),
       fps: scene.meta.fps,
       crf: options.crf,
       preset: options.preset,
-      onProgress: (frame) => onProgress?.(frame, totalFrames),
+      onProgress: (frame) => onProgress?.(frame, framesToRender),
     });
   } finally {
-    // 8. Clean up temp frames (even on error)
     if (!options.tempDir) {
       await rm(framesDir, { recursive: true, force: true });
     }
   }
+
+  void staticLayerIds; // referenced to avoid unused-var lint
+  void staticCache;
 }
 
 // ─── Single Frame Render ──────────────────────────────────────────────────────
 
-/**
- * Renders a single frame at the given time and saves as PNG.
- * Fast feedback loop for Codex/Boss review.
- */
 export async function renderSingleFrame(options: RenderFrameOptions): Promise<void> {
   const { scenePath, time, outputPath } = options;
 
@@ -147,11 +217,8 @@ export async function renderSingleFrame(options: RenderFrameOptions): Promise<vo
   const assetPaths = resolveAssetPaths(scene, sceneDir);
   const imageCache = await loadAssets(assetPaths);
 
-  const { composeFrame } = await import("@22b/anime-core");
   const composed = composeFrame(scene, time);
   const buffer = renderFrameToBuffer(composed, imageCache);
 
-  const { writeFile } = await import("node:fs/promises");
-  const { resolve: pathResolve } = await import("node:path");
-  await writeFile(pathResolve(outputPath), buffer);
+  await writeFile(resolve(outputPath), buffer);
 }

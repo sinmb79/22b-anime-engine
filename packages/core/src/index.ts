@@ -8,7 +8,8 @@ export type { AudioTrack, LipSyncCue, LipSync } from "./schema/audio.js";
 export { DefaultTransform } from "./schema/keyframe.js";
 
 // Validation
-export { validateScene, ValidationError } from "./schema/validate.js";
+export { validateScene, preflightValidate, ValidationError } from "./schema/validate.js";
+export type { ValidationIssue, PreflightResult, IssueSeverity } from "./schema/validate.js";
 
 // Engine
 export { interpolateKeyframes, applyEasing } from "./engine/interpolator.js";
@@ -19,3 +20,7 @@ export { composeFrame } from "./engine/compositor.js";
 export type { ComposedFrame, ResolvedLayer, ResolvedDrawCall } from "./engine/compositor.js";
 export { frameIterator } from "./engine/timeline.js";
 export type { FrameState } from "./engine/timeline.js";
+
+// Secondary motion
+export { applySecondaryMotion } from "./engine/secondary-motion.js";
+export type { SecondaryMotionOptions } from "./engine/secondary-motion.js";
