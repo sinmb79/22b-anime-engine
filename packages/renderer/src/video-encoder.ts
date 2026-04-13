@@ -1,5 +1,7 @@
 import { spawn, execSync } from "node:child_process";
 import { join } from "node:path";
+import { homedir, platform } from "node:os";
+import { existsSync } from "node:fs";
 
 export interface EncodeOptions {
   framesDir: string;
@@ -16,21 +18,47 @@ export interface EncodeOptions {
 
 // ─── FFmpeg Detection ─────────────────────────────────────────────────────────
 
-let ffmpegChecked = false;
+/** Resolved FFmpeg binary path (set once on first checkFfmpeg() call). */
+let ffmpegBin = "ffmpeg";
+
+/** Candidate fallback paths when FFmpeg is not in PATH (e.g. fresh WinGet install). */
+function ffmpegCandidates(): string[] {
+  if (platform() !== "win32") return [];
+  const home = homedir();
+  return [
+    join(home, "AppData/Local/Microsoft/WinGet/Links/ffmpeg.exe"),
+    join(home, "AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin/ffmpeg.exe"),
+    "C:/Program Files/ffmpeg/bin/ffmpeg.exe",
+    "C:/ffmpeg/bin/ffmpeg.exe",
+  ];
+}
 
 export function checkFfmpeg(): void {
-  if (ffmpegChecked) return;
+  if (ffmpegBin !== "ffmpeg") return; // already resolved
+
+  // Try PATH first
   try {
     execSync("ffmpeg -version", { stdio: "ignore" });
-    ffmpegChecked = true;
-  } catch {
-    throw new Error(
-      "FFmpeg not found. Please install it and ensure it is in PATH.\n" +
-      "  Windows: winget install ffmpeg\n" +
-      "  macOS:   brew install ffmpeg\n" +
-      "  Linux:   sudo apt install ffmpeg"
-    );
+    return; // found in PATH
+  } catch { /* fall through to candidates */ }
+
+  // Try known fallback locations (handles fresh WinGet install before shell restart)
+  for (const candidate of ffmpegCandidates()) {
+    if (existsSync(candidate)) {
+      try {
+        execSync(`"${candidate}" -version`, { stdio: "ignore" });
+        ffmpegBin = candidate;
+        return;
+      } catch { /* try next */ }
+    }
   }
+
+  throw new Error(
+    "FFmpeg not found. Please install it and ensure it is in PATH.\n" +
+    "  Windows: winget install ffmpeg  (then restart terminal)\n" +
+    "  macOS:   brew install ffmpeg\n" +
+    "  Linux:   sudo apt install ffmpeg"
+  );
 }
 
 // ─── Video Encoder ────────────────────────────────────────────────────────────
@@ -71,7 +99,7 @@ export function encodeVideo(options: EncodeOptions): Promise<void> {
   ];
 
   return new Promise((resolve, reject) => {
-    const proc = spawn("ffmpeg", args, { stdio: ["ignore", "ignore", "pipe"] });
+    const proc = spawn(ffmpegBin, args, { stdio: ["ignore", "ignore", "pipe"] });
 
     let stderr = "";
     proc.stderr.on("data", (chunk: Buffer) => {

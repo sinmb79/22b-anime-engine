@@ -1,0 +1,207 @@
+{
+  "version": "1.0",
+  "meta": {
+    "title": "달이네 냇가 — Shorts 씬1: 냇가 등장",
+    "fps": 24,
+    "width": 1920,
+    "height": 1080,
+    "duration": 10.0
+  },
+  "assets": [
+    {
+      "id": "bg_creek_spring",
+      "type": "image",
+      "source": { "path": "../../assets/backgrounds/creek_spring.png" }
+    },
+    {
+      "id": "char_dali",
+      "type": "image",
+      "source": { "path": "../../assets/characters/anim/dali.png" }
+    },
+    {
+      "id": "char_dori",
+      "type": "image",
+      "source": { "path": "../../assets/characters/anim/dori.png" }
+    }
+  ],
+  "layers": [
+    {
+      "id": "bg_main",
+      "type": "background",
+      "visible": true,
+      "opacity": 1.0,
+      "zIndex": 0,
+      "assetId": "bg_creek_spring",
+      "transform": {
+        "x": 960,
+        "y": 540,
+        "rotation": 0,
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "anchorX": 0.5,
+        "anchorY": 0.5
+      }
+    },
+    {
+      "id": "char_dori_layer",
+      "type": "character",
+      "visible": true,
+      "opacity": 1.0,
+      "zIndex": 9,
+      "pivot": { "x": 960, "y": 540 },
+      "transform": {
+        "x": -300,
+        "y": 810,
+        "rotation": 0,
+        "scaleX": 0.32,
+        "scaleY": 0.32,
+        "anchorX": 0.5,
+        "anchorY": 0.85
+      },
+      "keyframes": [
+        {
+          "time": 0.0,
+          "transform": { "x": -300 },
+          "easing": "linear"
+        },
+        {
+          "time": 7.5,
+          "transform": { "x": -300 },
+          "easing": "linear"
+        },
+        {
+          "time": 8.5,
+          "transform": { "x": 650 },
+          "easing": "ease-out"
+        },
+        {
+          "time": 10.0,
+          "transform": { "x": 650 },
+          "easing": "linear"
+        }
+      ],
+      "parts": [
+        {
+          "id": "body",
+          "assetId": "char_dori",
+          "pivot": { "x": 0.5, "y": 0.85 },
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "rotation": 0,
+            "scaleX": 1.0,
+            "scaleY": 1.0,
+            "anchorX": 0.5,
+            "anchorY": 0.85
+          },
+          "keyframes": [
+            { "time": 0.0, "transform": { "scaleY": 1.0 }, "easing": "ease-in-out" },
+            { "time": 1.5, "transform": { "scaleY": 1.02 }, "easing": "ease-in-out" },
+            { "time": 3.0, "transform": { "scaleY": 1.0 }, "easing": "ease-in-out" },
+            { "time": 4.5, "transform": { "scaleY": 1.02 }, "easing": "ease-in-out" },
+            { "time": 6.0, "transform": { "scaleY": 1.0 }, "easing": "ease-in-out" },
+            { "time": 7.5, "transform": { "scaleY": 1.02 }, "easing": "ease-in-out" },
+            { "time": 9.0, "transform": { "scaleY": 1.0 }, "easing": "ease-in-out" },
+            { "time": 10.0, "transform": { "scaleY": 1.0 }, "easing": "linear" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "char_dali_layer",
+      "type": "character",
+      "visible": true,
+      "opacity": 1.0,
+      "zIndex": 10,
+      "pivot": { "x": 960, "y": 540 },
+      "transform": {
+        "x": 2400,
+        "y": 790,
+        "rotation": 0,
+        "scaleX": 0.36,
+        "scaleY": 0.36,
+        "anchorX": 0.5,
+        "anchorY": 0.85
+      },
+      "keyframes": [
+        {
+          "time": 0.0,
+          "transform": { "x": 2400 },
+          "easing": "linear"
+        },
+        {
+          "time": 5.0,
+          "transform": { "x": 2400 },
+          "easing": "linear"
+        },
+        {
+          "time": 6.8,
+          "transform": { "x": 980 },
+          "easing": "ease-out"
+        },
+        {
+          "time": 7.2,
+          "transform": { "x": 950 },
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 10.0,
+          "transform": { "x": 950 },
+          "easing": "linear"
+        }
+      ],
+      "parts": [
+        {
+          "id": "body",
+          "assetId": "char_dali",
+          "pivot": { "x": 0.5, "y": 0.85 },
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "rotation": 0,
+            "scaleX": 1.0,
+            "scaleY": 1.0,
+            "anchorX": 0.5,
+            "anchorY": 0.85
+          },
+          "keyframes": [
+            { "time": 0.0,  "transform": { "scaleY": 1.0  }, "easing": "ease-in-out" },
+            { "time": 1.5,  "transform": { "scaleY": 1.02 }, "easing": "ease-in-out" },
+            { "time": 3.0,  "transform": { "scaleY": 1.0  }, "easing": "ease-in-out" },
+            { "time": 4.5,  "transform": { "scaleY": 1.02 }, "easing": "ease-in-out" },
+            { "time": 6.0,  "transform": { "scaleY": 1.0  }, "easing": "ease-in-out" },
+            { "time": 7.5,  "transform": { "scaleY": 1.02 }, "easing": "ease-in-out" },
+            { "time": 9.0,  "transform": { "scaleY": 1.0  }, "easing": "ease-in-out" },
+            { "time": 10.0, "transform": { "scaleY": 1.0  }, "easing": "linear" }
+          ]
+        }
+      ]
+    }
+  ],
+  "camera": {
+    "initialTransform": { "x": 960, "y": 540, "zoom": 1.0 },
+    "keyframes": [
+      {
+        "time": 0.0,
+        "x": 960, "y": 580, "zoom": 1.0,
+        "easing": "linear"
+      },
+      {
+        "time": 5.0,
+        "x": 960, "y": 560, "zoom": 1.1,
+        "easing": "ease-in-out"
+      },
+      {
+        "time": 7.5,
+        "x": 960, "y": 555, "zoom": 1.15,
+        "easing": "ease-in-out"
+      },
+      {
+        "time": 10.0,
+        "x": 960, "y": 555, "zoom": 1.15,
+        "easing": "linear"
+      }
+    ]
+  },
+  "audio": []
+}

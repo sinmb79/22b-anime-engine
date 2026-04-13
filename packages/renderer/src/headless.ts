@@ -128,8 +128,9 @@ export async function renderScene(options: RenderOptions): Promise<void> {
         ...baseScene,
         meta: {
           ...baseScene.meta,
-          width: Math.round(baseScene.meta.width * qualCfg.scaleFactor),
-          height: Math.round(baseScene.meta.height * qualCfg.scaleFactor),
+          // libx264 requires even dimensions — round to nearest even number
+          width: Math.round(baseScene.meta.width * qualCfg.scaleFactor / 2) * 2,
+          height: Math.round(baseScene.meta.height * qualCfg.scaleFactor / 2) * 2,
           fps: Math.round(baseScene.meta.fps / qualCfg.fpsDivisor),
         },
       };
