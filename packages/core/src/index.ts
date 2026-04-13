@@ -24,3 +24,57 @@ export type { FrameState } from "./engine/timeline.js";
 // Secondary motion
 export { applySecondaryMotion } from "./engine/secondary-motion.js";
 export type { SecondaryMotionOptions } from "./engine/secondary-motion.js";
+
+// Narrative planning
+export {
+  NarrativePayloadSchema,
+  NarrativeBeatSchema,
+  SceneArchetypeSchema,
+  ShotTypeSchema,
+  CameraMoveSchema,
+} from "./pipeline/narrative.js";
+export type {
+  NarrativePayload,
+  NarrativeBeat,
+  SceneArchetype,
+  ShotType,
+  CameraMove,
+} from "./pipeline/narrative.js";
+export {
+  parseScenarioMarkdown,
+  buildNarrativePayloadFromScenarioScene,
+} from "./pipeline/scenario-markdown.js";
+export type {
+  ScenarioMetadata,
+  ScenarioDialogueLine,
+  ScenarioScene,
+  ScenarioDocument,
+} from "./pipeline/scenario-markdown.js";
+export {
+  ScenePlanSchema,
+  ReviewStageSchema,
+  PromptPacketStageSchema,
+  PromptPacketSchema,
+  ReviewGateSchema,
+  AssetRequestSchema,
+  ShotPlanSchema,
+} from "./pipeline/scene-plan.js";
+export type {
+  ScenePlan,
+  ReviewStage,
+  PromptPacketStage,
+  PromptPacket,
+  ReviewGate,
+  AssetRequest,
+  ShotPlan,
+} from "./pipeline/scene-plan.js";
+export {
+  AssetCatalogEntrySchema,
+  AssetCatalogSchema,
+  buildDefaultAssetCatalog,
+  loadAssetCatalog,
+} from "./pipeline/asset-catalog.js";
+export type { AssetCatalogEntry, AssetCatalog } from "./pipeline/asset-catalog.js";
+export { validateNarrativePayload, buildScenePlan } from "./pipeline/build-scene-plan.js";
+export { compileSceneFromPlan } from "./pipeline/compile-scene.js";
+export type { CompileSceneOptions, CompiledSceneResult } from "./pipeline/compile-scene.js";

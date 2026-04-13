@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "assets": [
+    {
+      "id": "bg_bg01_creek_spring",
+      "kind": "background",
+      "name": "냇가 봄",
+      "aliases": ["BG01", "냇가", "봄 냇가"],
+      "path": "../../../assets/backgrounds/CORE LOCATIONS (4 Seasonal Variants Each)/[BG01-04] 냇가 (The Creek) — 메인 배경/[BG01] 냇가 — 봄.png"
+    },
+    {
+      "id": "char_dali",
+      "kind": "character",
+      "name": "달이",
+      "aliases": ["dali"],
+      "path": "../../../assets/characters/anim/dali.png",
+      "defaultScale": 0.34,
+      "anchorY": 0.85
+    },
+    {
+      "id": "char_dori",
+      "kind": "character",
+      "name": "돌이",
+      "aliases": ["dori", "doli"],
+      "path": "../../../assets/characters/anim/dori.png",
+      "defaultScale": 0.32,
+      "anchorY": 0.85
+    },
+    {
+      "id": "prop_moonlight_stone",
+      "kind": "prop",
+      "name": "달빛돌",
+      "aliases": ["moonlight stone"],
+      "path": "../../../assets/characters/KEY PROPS/[P1] 달빛돌 (Moonlight Stone).png",
+      "defaultScale": 0.18
+    }
+  ]
+}

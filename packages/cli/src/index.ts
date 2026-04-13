@@ -6,6 +6,9 @@ import { registerRenderFrameCommand } from "./commands/render-frame.js";
 import { registerDoctorCommand } from "./commands/doctor.js";
 import { registerMotionCommand } from "./commands/motion.js";
 import { registerBlenderCommand } from "./commands/blender.js";
+import { registerPlanCommand } from "./commands/plan.js";
+import { registerScenarioCommand } from "./commands/scenario.js";
+import { registerSceneCommand } from "./commands/scene.js";
 import { logCommand } from "./utils/logger.js";
 
 program
@@ -19,6 +22,9 @@ registerRenderFrameCommand(program);
 registerDoctorCommand(program);
 registerMotionCommand(program);
 registerBlenderCommand(program);
+registerPlanCommand(program);
+registerScenarioCommand(program);
+registerSceneCommand(program);
 
 logCommand(process.argv);
 program.parse();

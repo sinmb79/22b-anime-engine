@@ -11,6 +11,8 @@
 > **Production Strategy Update**: Long-form episodes now come first. Shorts are derivatives extracted from approved long-form scenes, not the other way around.
 > **Asset Status Update**: Image assets have been reorganized and saved by prompt/theme groupings. Canonical asset mapping should follow the new folder taxonomy, not the older flat layout assumptions.
 > **Scenario Status Update**: Season 1 scenario source now exists in `scenes/Dalis_Creek_EP01_Full.md`, `scenes/Dalis_Creek_EP02_EP10.md`, `scenes/Dalis_Creek_EP11_EP20.md`, and `scenes/Dalis_Creek_Series_Bible.md`.
+> **Planning Contract Update**: A narrative payload -> scene plan layer should now sit between scenario markdown and Scene JSON so review gates and asset requests can stabilize before previz.
+> **Bridge Status Update**: CLI now supports `anime scenario list`, `anime scenario payload`, `anime plan build`, and `anime scene compile` as the long-form planning bridge.
 
 ---
 

@@ -1,0 +1,73 @@
+{
+  "version": "1.0",
+  "storyId": "dalis_creek_s1",
+  "episodeId": "ep01",
+  "sequenceId": "opening",
+  "title": "Dalis Creek Episode 1 Opening",
+  "sourceScenario": "scenes/Dalis_Creek_EP01_Full.md",
+  "locale": "ko-KR",
+  "visualStyle": "storybook_toon",
+  "sceneArchetype": "outdoor",
+  "philosophyNote": "Small acts of kindness reshape the emotional climate of a place.",
+  "emotionalTexture": "gentle wonder with playful warmth",
+  "narrativeChecks": [
+    "The creek should feel alive before dialogue begins.",
+    "Dali and Dori must read as friends before the first line lands.",
+    "The opening beat should already feel reusable for both long-form and later short extraction."
+  ],
+  "keyProp": "basket of spring herbs",
+  "keySilenceSec": 0.8,
+  "characterDescription": "Dali, Dori, and a child-friendly forest world with rounded silhouettes",
+  "location": "sunlit creek path in early spring",
+  "beats": [
+    {
+      "id": "beat_01",
+      "summary": "The creek opens in quiet motion before the characters enter.",
+      "visualIntent": "Use drifting water, leaves, and warm morning light to establish tone.",
+      "emotionalHint": "calm invitation",
+      "durationSec": 4.5,
+      "shotType": "wide",
+      "sceneArchetype": "wide",
+      "location": "sunlit creek path in early spring",
+      "props": [
+        "basket of spring herbs"
+      ],
+      "silenceAfterSec": 0.8
+    },
+    {
+      "id": "beat_02",
+      "summary": "Dori arrives first and waits with a patient smile.",
+      "dialogue": "Dali is late again, but the creek is worth waiting for.",
+      "visualIntent": "Shift from environment to character warmth without losing the creek.",
+      "emotionalHint": "friendly patience",
+      "durationSec": 4.0,
+      "shotType": "medium",
+      "location": "sunlit creek path in early spring",
+      "characters": [
+        "Dori"
+      ],
+      "props": [
+        "basket of spring herbs"
+      ]
+    },
+    {
+      "id": "beat_03",
+      "summary": "Dali rushes in with bright energy and turns the waiting into reunion.",
+      "dialogue": "I found the herbs. Come on, the morning is too pretty to waste.",
+      "visualIntent": "The reunion should feel like motion entering a peaceful frame, not breaking it.",
+      "emotionalHint": "playful joy",
+      "durationSec": 4.2,
+      "shotType": "action",
+      "sceneArchetype": "action",
+      "location": "sunlit creek path in early spring",
+      "characters": [
+        "Dali",
+        "Dori"
+      ],
+      "props": [
+        "basket of spring herbs"
+      ],
+      "silenceAfterSec": 0.4
+    }
+  ]
+}
